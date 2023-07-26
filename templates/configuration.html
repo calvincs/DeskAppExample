@@ -1,0 +1,61 @@
+<!-- configuration.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuration</title>
+</head>
+<body>
+    <fieldset id="configuration__form" class="table">
+        <legend>Configuration Settings</legend>
+        <p> Simulates a slow update process, and both random failure and successful updates</p>
+        <form id="configForm" hx-post="/system_configuration" hx-target="#content" hx-indicator="#loading">
+            <label for="appName">App Name:</label>
+            <input type="text" id="appName" name="name" value="{{ app_name }}" required><br>
+
+            <label for="onExit">On Exit URL:</label>
+            <input type="url" id="onExit" name="on_exit" value="{{ on_exit }}" required><br>
+
+            <label for="owner">Owner:</label>
+            <input type="text" id="owner" name="owner" value="{{ owner }}" required><br>
+
+            <label for="version">Version:</label>
+            <input type="text" id="version" name="version" value="{{ version }}" required><br>
+
+            <label for="created">Created:</label>
+            <input type="datetime-local" id="created" name="created" value="{{ created }}" required><br>
+
+            <button type="submit" onclick="clearMsg()">Save Changes</button>
+        </form>
+    </fieldset>
+    <!-- Display the update status here -->
+    <div id="updateStatus">
+        {% if update_success %}
+            <div class="box ok">
+                <strong class="block titlebar">Success</strong>
+                {{ update_success }}
+            </div>
+        {% endif %}
+        {% if update_error %}
+            <div class="box bad">
+                <strong class="block titlebar">Error</strong>
+                {{ update_error }}
+            </div>
+        {% endif %}
+    </div>
+    <! -- Loading indicator here -->
+    <div id="loading" class="htmx-indicator">
+        <p>Loading, please wait...</p>
+        <!-- Loader Icon, use your own or a standard one like a spinner -->
+        <img src="{{ url_for('static', filename='img/loader.gif') }}" alt="Processing..." />
+    </div>
+    
+    <script>
+        function clearMsg() {
+            document.getElementById("updateStatus").innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
