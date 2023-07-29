@@ -8,3 +8,17 @@
 .htmx-request.htmx-indicator{
     opacity:1
 }
+
+#content {
+    padding: 50px;
+}
+
+
+.toplock {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background-color: #16222f; /* background color, change to match your design */
+}

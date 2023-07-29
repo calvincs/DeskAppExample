@@ -5,7 +5,6 @@ from flask import Flask, render_template, request
 from functools import wraps
 import webview
 import os
-import json 
 import time
 import psutil
 import configparser
@@ -28,8 +27,7 @@ server.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1  # disable caching
 def verify_token(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
-        data = json.loads(request.data)
-        token = data.get('token')
+        token = request.headers.get('token')
         if token == webview.token:
             return function(*args, **kwargs)
         else:
@@ -59,17 +57,8 @@ def add_header(response):
 
 
 
-# Web Routes
-@server.route('/')
-def index():
-    """
-        This function renders the index.html template when you visit the root URL.
-    """
-    server.logger.info("Index page visited")
-    return render_template('index.html')
-
-
 @server.route("/home")
+@verify_token
 def home():
     """
         This function renders the home.html template when you visit the /home URL.
@@ -87,6 +76,7 @@ def home():
 
 
 @server.route('/calc', methods=['GET', 'POST'])
+@verify_token
 def calculate():
     """
         This function renders the calculator.html template when you visit the /calc URL.
@@ -121,6 +111,7 @@ def calculate():
 
 
 @server.route("/system")
+@verify_token
 def system_info():
     """
         This function renders the system_info.html template when you visit the /system URL.
@@ -146,6 +137,7 @@ def system_info():
 
 # Route to display system configuration using the configuration.html template
 @server.route("/system_configuration", methods=["GET", "POST"])
+@verify_token
 def system_configuration():
     """
         This function renders the configuration.html template when you visit the /system_configuration URL.
@@ -214,6 +206,7 @@ def system_configuration():
 
 
 @server.route("/logs")
+@verify_token
 def logs():
     """
         This function renders the logs.html template when you visit the /logs URL.
