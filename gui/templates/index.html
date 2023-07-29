@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/missing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+    <section class="tool-bar">
+        <button type=button hx-get="/home" hx-target="#content">Home</button>
+        <hr aria-orientation="vertical">
+        <button type=button hx-get="/calc" hx-target="#content">Calculator</button>
+        <hr aria-orientation="vertical">
+        <button type=button hx-get="/system" hx-target="#content">System Info</button>
+        <hr aria-orientation="vertical">
+        <button type=button hx-get="/system_configuration" hx-target="#content">Configuration</button>
+        <hr aria-orientation="vertical">
+        <button type=button hx-get="/logs" hx-target="#content">Logs</button>
+      </section>
+
+    <div id="content" hx-get="/home" hx-trigger="load">
+        <!-- Content will be loaded here -->
+    </div>
+        <!-- Modal content using the <dialog> element -->
+        <div>
+            <p>Token {{ token }}</p>
+        </div>
+    <dialog id="modal">
+        <p id="modalMessage"></p>
+        <button id="closeBtn">OK</button>
+    </dialog>
+
+</body>
+</html>
