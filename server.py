@@ -117,6 +117,10 @@ def system_info():
         This function renders the system_info.html template when you visit the /system URL.
     """
     # Get running processes info
+
+    output = webview.windows[0].create_file_dialog(webview.OPEN_DIALOG, allow_multiple=True, file_types=(("All files", "*.*"),))
+    server.logger.info("File dialog opened: {}".format(output))
+
     processes = []
     for process in psutil.process_iter(['username', 'pid', 'name', 'memory_info', 'cpu_percent', 'status']):
         processes.append(process.info)
