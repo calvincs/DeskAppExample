@@ -28,7 +28,7 @@ handler.setFormatter(formatter)
 app.logger.setLevel(logging.INFO)
 app.logger.addHandler(handler)
 
-REDIRECT_URL = "http://localhost:5000/home"
+REDIRECT_URL = "http://127.0.0.1:5000/home"
 
 
 # No Caching Allowed
@@ -116,9 +116,6 @@ def system_info():
     processes = []
     for process in psutil.process_iter(['username', 'pid', 'name', 'memory_info', 'cpu_percent', 'status']):
         processes.append(process.info)
-
-    # Sort processes by memory usage (descending) and then by CPU usage (descending)
-    processes = sorted(processes, key=lambda x: (x['memory_info'].rss, x['cpu_percent']), reverse=True)
 
     # Get memory info
     memory_info = psutil.virtual_memory()
@@ -252,7 +249,7 @@ def open_browser():
         This function opens the default web browser to the Flask server's URL.
     """
     app.logger.info("Opening browser to main application page")
-    webbrowser.open_new('http://localhost:5000/')
+    webbrowser.open_new('http://127.0.0.1:5000/')
 
 
 def shutdown_server():
@@ -307,26 +304,13 @@ if __name__ == "__main__":
     # Start the ping monitoring in a separate thread
     Thread(target=monitor_pings, daemon=True).start()
     # Open the web browser after 1 second, giving the app time to start up
-    Timer(1, open_browser).start()
+    Timer(1.25, open_browser).start()
 
     # Setup some variables to be used in the app
     config = read_config()
 
     if "on_exit" in config['APP']:
         REDIRECT_URL = config['APP']['on_exit']
-
-    if "name" in config['APP']:
-        APP_NAME = config['APP']['name']
-
-    if "owner" in config['APP']:
-        OWNER = config['APP']['owner']
-
-    if "version" in config['APP']:
-        VERSION = config['APP']['version']
-
-    if "created" in config['APP']:
-        CREATED = config['APP']['created']
-
 
     # If debug is True, and use_reloader is True, then the server will be restarted when code changes
     app.run(use_reloader=False, debug=False)
