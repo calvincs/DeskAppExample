@@ -1,5 +1,7 @@
 <!-- welcome.html -->
-<h1>Welcome to {{ data.app_name }}</h1>
-<p>Owned by: {{ data.owner }}</p>
-<p>Version: {{ data.version }}</p>
-<p>Created on: {{ data.created }}</p>
+<fieldset>
+    <legend>Welcome to {{ data.get('name') }}</legend>
+    <p>Owned by: {{ data.get('owner') }}</p>
+    <p>Version: {{ data.get('version') }}</p>
+    <p>Created on: {{ data.get('created') }}</p>
+</fieldset>

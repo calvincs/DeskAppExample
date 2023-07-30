@@ -3,36 +3,37 @@
 <head>
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-    <title>Demo</title>
-    <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/missing.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Demo Application</title>
+    <script src="static/js/htmx.min.js"></script>
+    <link rel="stylesheet" href="static/css/missing.css">
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
-    <section class="tool-bar toplock">
-        <button type=button hx-get="/home" hx-target="#content">Home</button>
+    <body>
+        <section class="tool-bar toplock">
+            <button type=button hx-get="/home" hx-target="#content">Home</button>
+            <button type=button hx-get="/calc" hx-target="#content">Calculator</button>
+            <button type=button hx-get="/system" hx-target="#content">System Info</button>
+            <button type=button hx-get="/system_configuration" hx-target="#content">Configuration</button>
+            <button type=button hx-get="/logs" hx-target="#content">Logs</button>
+        </section>
 
-        <button type=button hx-get="/calc" hx-target="#content">Calculator</button>
-
-        <button type=button hx-get="/system" hx-target="#content">System Info</button>
-
-        <button type=button hx-get="/system_configuration" hx-target="#content">Configuration</button>
-
-        <button type=button hx-get="/logs" hx-target="#content">Logs</button>
-      </section>
-
-    <div id="content" hx-get="/home" hx-trigger="load">
-        <!-- Content will be loaded here -->
-    </div>
-        <!-- Modal content using the <dialog> element -->
-    <dialog id="modal">
-        <p id="modalMessage"></p>
-        <button id="closeBtn">OK</button>
-    </dialog>
-    <script>
-        // Authorize all requests via the token in the header for htmx calls
-        document.body.addEventListener('htmx:configRequest', (event) => {
-            event.detail.headers['token'] = '{{ token}}';
-        });
-    </script>
-</body>
+        <div id="content" hx-get="/home" hx-trigger="load">
+            <!-- Content will be loaded here -->
+        </div>
+            <!-- Modal content using the <dialog> element -->
+        <dialog id="modal">
+            <p id="modalMessage"></p>
+            <button id="closeBtn">OK</button>
+        </dialog>
+        <!-- Overlay -->
+        <div id="overlay">
+            <div id="overlay-text"></div>
+        </div>
+        <script>
+            // Authorize all requests via the token in the header for htmx calls
+            document.body.addEventListener('htmx:configRequest', (event) => {
+                event.detail.headers['token'] = '{{token}}';
+            });
+        </script>
+    </body>
 </html>

@@ -56,7 +56,6 @@ def add_header(response):
     return response
 
 
-
 @server.route("/home")
 @verify_token
 def home():
@@ -64,15 +63,7 @@ def home():
         This function renders the home.html template when you visit the /home URL.
     """
     config = read_config()
-
-    data = {
-        "redirect_url": config['APP'].get('on_exit'),
-        "app_name": config['APP'].get('name'),
-        "owner": config['APP'].get('owner'),
-        "version": config['APP'].get('version'),
-        "created": config['APP'].get('created'),
-    }
-    return render_template("welcome.html", data=data)
+    return render_template("welcome.html", data=config["APP"])
 
 
 @server.route('/calc', methods=['GET', 'POST'])
@@ -103,9 +94,11 @@ def calculate():
             server.logger.error("Error occured: {}".format(str(e)))
 
             if str(e) == "division by zero":
-                return "You can't divide by zero", 400
+                message = "You can't divide by zero"
             else:
-                return "Error occured, see logs for details", 400
+                message = "Error occured, see logs for details"
+            
+            return render_template('calculator.html', error=message)
 
     return render_template('calculator.html')
 
@@ -114,13 +107,9 @@ def calculate():
 @verify_token
 def system_info():
     """
-        This function renders the system_info.html template when you visit the /system URL.
+        This function renders the system_info.html template when yogif_path=url_for('static', filename='img/loader.gif')u visit the /system URL.
     """
     # Get running processes info
-
-    output = webview.windows[0].create_file_dialog(webview.OPEN_DIALOG, allow_multiple=True, file_types=(("All files", "*.*"),))
-    server.logger.info("File dialog opened: {}".format(output))
-
     processes = []
     for process in psutil.process_iter(['username', 'pid', 'name', 'memory_info', 'cpu_percent', 'status']):
         processes.append(process.info)
@@ -172,21 +161,23 @@ def system_configuration():
         config['APP']['created'] = request.form['created']
 
         #Simulate delay to show off loader, and simulate a failed update.
-        random_delay = random.randint(1, 5)
+        random_delay = random.randint(1, 10)
+        tempwindow = loading("Updating config.ini file...")
         time.sleep(random_delay)
 
         # Determine if this was a successful update or not, randomly 50/50 chance
         if random.randint(0, 1) == 0:
-            update_status = "Config update failed!"
+            status = "Config update failed!"
 
             server.logger.warning("Config update failed!")
+            tempwindow.destroy()
 
             return render_template('configuration.html', **{
                 'app_name': config['APP']['name'],
                 'owner': config['APP']['owner'],
                 'version': config['APP']['version'],
                 'created': config['APP']['created'],
-                'update_error': update_status,
+                'error': status,
             })
         
         else:
@@ -194,19 +185,18 @@ def system_configuration():
             write_config(config)
 
             server.logger.info("Config updated successfully!")
+            tempwindow.destroy()
 
             # Prepare the update status message
-            update_status = "Config updated successfully!"
+            status = "Config updated successfully!"
             return render_template('configuration.html', **{
                 'app_name': config['APP']['name'],
                 'owner': config['APP']['owner'],
                 'version': config['APP']['version'],
                 'created': config['APP']['created'],
-                'update_success': update_status,
+                'success': status,
             })
 
-    else:
-        return "Method not allowed", 405
 
 
 @server.route("/logs")
@@ -220,6 +210,29 @@ def logs():
         last_lines = [line.strip() for line in lines[-10:]]
         
     return render_template("logs.html", logs=last_lines)
+
+
+# Loading Screen
+def loading(message):
+    """
+        This function renders the loading.html template
+
+        params:
+            message: The message to display on the loading screen
+
+        returns:
+            tempwindow: The webview window object
+
+        You can use this function to display a loading screen while you perform some long running task.
+        You should call the destroy() method on the returned window object when you are done with the loading screen.
+
+        This is a bit hacky, but it works.
+    """
+    html=render_template('loading.html', message=message)
+    tempwindow = webview.create_window("Loading Window", frameless=True, on_top=True, width=400, height=400)
+    tempwindow.load_html(html)
+
+    return tempwindow
 
 
 # Function to read the config.ini file

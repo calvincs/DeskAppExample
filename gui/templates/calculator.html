@@ -20,3 +20,19 @@
 {% if result %}
 <h2>Result: {{ result }}</h2>
 {% endif %}
+
+<!-- Display the update status here -->
+<div id="updateStatus">
+    {% if success %}
+        <div class="box ok">
+            <strong class="block titlebar">Success</strong>
+            {{ success }}
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="box bad">
+            <strong class="block titlebar">Error</strong>
+            {{ error }}
+        </div>
+    {% endif %}
+</div>

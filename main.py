@@ -26,9 +26,5 @@ if __name__ == '__main__':
     # Start the application server
     stream = StringIO()
     with redirect_stdout(stream):
-        window = webview.create_window('Demo Application', server, min_size=(800, 800), confirm_close=True)
-
-        # Give webserver context of the window so it can update the UI if needed
-        server.window_context = window
-
+        window = webview.create_window('Demo Application', server, min_size=(1024, 768), confirm_close=True)
         webview.start(debug=False)

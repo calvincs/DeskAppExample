@@ -2,7 +2,7 @@
 <fieldset id="configuration__form" class="table">
     <legend>Configuration Settings</legend>
     <p> Simulates a slow update process, and both random failure and successful updates</p>
-    <form id="configForm" hx-post="/system_configuration" hx-target="#content" hx-indicator="#loading">
+    <form id="configForm" hx-post="/system_configuration" hx-target="#content">
         <label for="appName">App Name:</label>
         <input type="text" id="appName" name="name" value="{{ app_name }}" required><br>
 
@@ -20,28 +20,31 @@
 </fieldset>
 <!-- Display the update status here -->
 <div id="updateStatus">
-    {% if update_success %}
+    {% if success %}
         <div class="box ok">
             <strong class="block titlebar">Success</strong>
-            {{ update_success }}
+            {{ success }}
         </div>
     {% endif %}
-    {% if update_error %}
+    {% if error %}
         <div class="box bad">
             <strong class="block titlebar">Error</strong>
-            {{ update_error }}
+            {{ error }}
         </div>
     {% endif %}
 </div>
-<! -- Loading indicator here -->
-<div id="loading" class="htmx-indicator">
-    <p>Loading, please wait...</p>
-    <!-- Loader Icon, use your own or a standard one like a spinner -->
-    <img src="{{ url_for('static', filename='img/loader.gif') }}" alt="Processing..." />
-</div>
-
 <script>
     function clearMsg() {
+        // This function will be executed before the POST request is sent
+        // Put an overlay on the screen to stop the user from clicking anything
+        document.getElementById('overlay').style.display = 'block';
+        // Clear the update status if it exists
         document.getElementById("updateStatus").innerHTML = "";
     }
+
+    document.getElementById('configForm').addEventListener('htmx:afterOnLoad', function() {
+        // This function will be executed after the POST request has been completed
+        // Hide overlay
+        document.getElementById('overlay').style.display = 'none';
+    });
 </script>
