@@ -1,9 +1,8 @@
 #content {
-    margin-top: 35px;
+    margin-top: 50px;
     margin-bottom: 5px;
-    margin-left: 10px;
+    margin-left: 5px;
     margin-right: 5px;
-    padding: 2px;
 }
 
 .toplock {
@@ -16,11 +15,17 @@
 }
 
 #logs-display {
-    margin: 0 auto;
-    width: 100%;
-    border: 1px solid #0478f4;
-    border-radius: 5px;
-    border-style: dotted;
+    width: 100%; /* change to suit your needs */
+    height: 500px; /* change to suit your needs */
+    overflow: auto; /* add scrollbar when necessary */
+    white-space: pre-wrap; /* enable text wrapping */
+    word-wrap: break-word; /* enable text wrapping */
+    border: 1px solid #ccc;
+    padding-left: 0;
+    text-align: left;
+    box-sizing: border-box;
+    font-family: monospace; /* give it a code-like appearance */
+    background-color: #282727; /* light grey background for better readability */
 }
 
 #overlay {
@@ -49,10 +54,10 @@
     align-items: center;
     justify-content: center;
     background-size: 200% 200%;
-    animation: gradient-shift 30s ease infinite;
+    animation: gradient-shift 15s ease infinite;
     background: linear-gradient(60deg, #ff00cc, #333399, #ff9933);
     background-size: 600% 600%;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 @keyframes gradient-shift {
@@ -65,7 +70,7 @@
     font-size: 18px;
     font-weight: bold;
     color: white;
-    animation: fade 5s ease-in-out infinite;
+    animation: fade 5s ease infinite;
 }
 
 @keyframes fade {
@@ -76,4 +81,31 @@
 #loader img {
     width: 100px;
     height: 100px;
+}
+
+legend {
+    text-align: center;
+    font-size: 18px;
+    margin: 5px;
+    padding: 10px;
+    font-weight: bold;
+    animation: gradient-shift 15s ease infinite;
+    background: linear-gradient(60deg, #ff00cc, #333399, #ff9933);
+    background-size: 600% 600%;
+    border-radius: 5px;
+}
+
+fieldset {
+    border: 2px solid #ff00cc;
+    animation: changeColor 15s ease infinite;
+}
+
+@keyframes changeColor {
+    0%   {border-color:#ff00cc;}
+    50%  {border-color:#ff9933;}
+    100% {border-color:#333399;}
+}
+
+select {
+    color: black;
 }

@@ -47,6 +47,8 @@ def landing():
     """
     Render index.html. Initialization is performed asynchronously in initialize() function
     """
+    server.logger.info("Landing page visited")
+
     return render_template('index.html', token=webview.token)
 
 
@@ -62,6 +64,8 @@ def home():
     """
         This function renders the home.html template when you visit the /home URL.
     """
+    server.logger.info("Home page visited")
+
     config = read_config()
     return render_template("welcome.html", data=config["APP"])
 
@@ -72,6 +76,8 @@ def calculate():
     """
         This function renders the calculator.html template when you visit the /calc URL.
     """
+    server.logger.info("Calculator page visited")
+
     if request.method == 'POST':
         try:
             num1 = int(request.form.get('num1'))
@@ -109,6 +115,8 @@ def system_info():
     """
         This function renders the system_info.html template when yogif_path=url_for('static', filename='img/loader.gif')u visit the /system URL.
     """
+    server.logger.info("System info page visited")
+
     # Get running processes info
     processes = []
     for process in psutil.process_iter(['username', 'pid', 'name', 'memory_info', 'cpu_percent', 'status']):
@@ -123,8 +131,6 @@ def system_info():
     # Get Disk info
     disk_info = psutil.disk_usage('/')
 
-    server.logger.info("System info page visited")
-
     return render_template('system_info.html', processes=processes, memory_info=memory_info, cpu_info=cpu_info, disk_info=disk_info)
 
 
@@ -137,6 +143,8 @@ def system_configuration():
 
         It also handles the form submission and updates the config.ini file with the submitted data.
     """
+    server.logger.info("System configuration page visited")
+
     # Read the config.ini file
     config = read_config()
     
@@ -161,7 +169,7 @@ def system_configuration():
         config['APP']['created'] = request.form['created']
 
         #Simulate delay to show off loader, and simulate a failed update.
-        random_delay = random.randint(1, 10)
+        random_delay = random.randint(1, 15)
         # tempwindow = loading("Updating config.ini file...")
         time.sleep(random_delay)
 
@@ -202,9 +210,11 @@ def logs():
     """
         This function renders the logs.html template when you visit the /logs URL.
     """
+    server.logger.info("Logs page visited")
+
     with open(server.log_file_name, 'r') as f:
         lines = f.readlines()
-        last_lines = [line.strip() for line in lines[-10:]]
+        last_lines = [line for line in lines[-10:]]
         
     return render_template("logs.html", logs=last_lines)
 
