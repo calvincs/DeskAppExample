@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="gui/static/css/missing.css">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: 200% 200%;
+            animation: gradient-shift 30s ease infinite;
+            background: linear-gradient(60deg, #ff00cc, #333399, #ff9933);
+            background-size: 600% 600%;
+            border-radius: 10px;
+        }
+          
+        @keyframes gradient-shift {
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+        }
+
+        #content {
+            text-align: center;
+            border-radius: 25px;
+        }
+
+        p {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            animation: fade 5s ease-in-out infinite;
+        }
+        
+        @keyframes fade {
+            0%, 100% {opacity: 0.33;}
+            50% {opacity: 1;}
+        }
+        
+        
+        #content img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <!-- Loading indicator here -->
+        <p>{{ message }}</p>
+        <!-- Loader Icon, use your own or a standard one like a spinner -->
+        <img src="gui/static/img/loader.gif"/>
+    </div>
+</body>
+</html>
