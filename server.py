@@ -162,7 +162,7 @@ def system_configuration():
 
         #Simulate delay to show off loader, and simulate a failed update.
         random_delay = random.randint(1, 10)
-        tempwindow = loading("Updating config.ini file...")
+        # tempwindow = loading("Updating config.ini file...")
         time.sleep(random_delay)
 
         # Determine if this was a successful update or not, randomly 50/50 chance
@@ -170,7 +170,6 @@ def system_configuration():
             status = "Config update failed!"
 
             server.logger.warning("Config update failed!")
-            tempwindow.destroy()
 
             return render_template('configuration.html', **{
                 'app_name': config['APP']['name'],
@@ -185,7 +184,6 @@ def system_configuration():
             write_config(config)
 
             server.logger.info("Config updated successfully!")
-            tempwindow.destroy()
 
             # Prepare the update status message
             status = "Config updated successfully!"
@@ -196,7 +194,6 @@ def system_configuration():
                 'created': config['APP']['created'],
                 'success': status,
             })
-
 
 
 @server.route("/logs")
@@ -210,29 +207,6 @@ def logs():
         last_lines = [line.strip() for line in lines[-10:]]
         
     return render_template("logs.html", logs=last_lines)
-
-
-# Loading Screen
-def loading(message):
-    """
-        This function renders the loading.html template
-
-        params:
-            message: The message to display on the loading screen
-
-        returns:
-            tempwindow: The webview window object
-
-        You can use this function to display a loading screen while you perform some long running task.
-        You should call the destroy() method on the returned window object when you are done with the loading screen.
-
-        This is a bit hacky, but it works.
-    """
-    html=render_template('loading.html', message=message)
-    tempwindow = webview.create_window("Loading Window", frameless=True, on_top=True, width=400, height=400)
-    tempwindow.load_html(html)
-
-    return tempwindow
 
 
 # Function to read the config.ini file

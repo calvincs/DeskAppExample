@@ -23,7 +23,6 @@
     border-style: dotted;
 }
 
-
 #overlay {
     display: none;
     position: fixed;
@@ -38,3 +37,43 @@
     cursor: pointer;
   }
   
+  #loader {
+    text-align: center;
+    margin: 0;
+    height: 25vh;
+    width: 25vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    justify-content: center;
+    background-size: 200% 200%;
+    animation: gradient-shift 30s ease infinite;
+    background: linear-gradient(60deg, #ff00cc, #333399, #ff9933);
+    background-size: 600% 600%;
+    border-radius: 10px;
+}
+
+@keyframes gradient-shift {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+    }
+
+#loader p {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    animation: fade 5s ease-in-out infinite;
+}
+
+@keyframes fade {
+    0%, 100% {opacity: 0.33;}
+    50% {opacity: 1;}
+}
+
+#loader img {
+    width: 100px;
+    height: 100px;
+}

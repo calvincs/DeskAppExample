@@ -26,8 +26,13 @@
             <button id="closeBtn">OK</button>
         </dialog>
         <!-- Overlay -->
-        <div id="overlay">
-            <div id="overlay-text"></div>
+        <div id="overlay" class="htmx-indicator">
+            <div id="loader">
+                <!-- Loading indicator here -->
+                <p>Please Hold</p>
+                <!-- Loader Icon, use your own or a standard one like a spinner -->
+                <img src="static/img/loader.gif"/>
+            </div>
         </div>
         <script>
             // Authorize all requests via the token in the header for htmx calls
@@ -37,3 +42,5 @@
         </script>
     </body>
 </html>
+
+
