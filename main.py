@@ -141,7 +141,7 @@ def main():
     # Start the application server
     stream = StringIO()
     with redirect_stdout(stream):
-        window_one = webview.create_window('Demo Application', server, min_size=(1024, 768), confirm_close=True, on_top=True)
+        window_one = webview.create_window('Demo Application', server, min_size=(1024, 768))
         webview.start(set_instance_uri, window_one, debug=False, menu=app_menu)
 
 if __name__ == '__main__':
