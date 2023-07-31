@@ -2,7 +2,7 @@
 <fieldset id="configuration__form" class="table">
     <legend>Configuration Settings</legend>
     <p> Simulates a slow update process, and both random failure and successful updates</p>
-    <form id="configForm" hx-post="/system_configuration" hx-target="#content" hx-indicator="#overlay">
+    <form id="configForm" hx-post="/config" hx-target="#content" hx-indicator="#overlay">
         <label for="appName">App Name:</label>
         <input type="text" id="appName" name="name" value="{{ app_name }}" required><br>
 

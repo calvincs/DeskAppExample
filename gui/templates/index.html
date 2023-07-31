@@ -9,15 +9,7 @@
     <link rel="stylesheet" href="static/css/style.css">
 </head>
     <body>
-        <section class="tool-bar toplock">
-            <button type=button hx-get="/home" hx-target="#content">Home</button>
-            <button type=button hx-get="/calc" hx-target="#content">Calculator</button>
-            <button type=button hx-get="/system" hx-target="#content">System Info</button>
-            <button type=button hx-get="/system_configuration" hx-target="#content">Configuration</button>
-            <button type=button hx-get="/logs" hx-target="#content">Logs</button>
-        </section>
-
-        <div id="content" hx-get="/home" hx-trigger="load">
+        <div id="content" hx-get="{{ route }}" hx-trigger="load">
             <!-- Content will be loaded here -->
         </div>
             <!-- Modal content using the <dialog> element -->

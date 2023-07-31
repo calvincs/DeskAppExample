@@ -6,29 +6,6 @@
     padding: 5px;
 }
 
-.toplock {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    background-color: rgba(0, 0, 0, 0.60); /* background color, change to match your design */
-}
-
-#logs-display {
-    width: 100%; /* change to suit your needs */
-    height: 500px; /* change to suit your needs */
-    overflow: auto; /* add scrollbar when necessary */
-    white-space: pre-wrap; /* enable text wrapping */
-    word-wrap: break-word; /* enable text wrapping */
-    border: 1px solid #ccc;
-    padding-left: 0;
-    text-align: left;
-    box-sizing: border-box;
-    font-family: monospace; /* give it a code-like appearance */
-    background-color: #282727; /* light grey background for better readability */
-}
-
 #overlay {
     display: none;
     position: fixed;
@@ -71,11 +48,11 @@
     font-size: 18px;
     font-weight: bold;
     color: white;
-    animation: fade 5s ease infinite;
+    animation: fade 3s ease infinite;
 }
 
 @keyframes fade {
-    0%, 100% {opacity: 0.33;}
+    0%, 100% {opacity: 0.50;}
     50% {opacity: 1;}
 }
 

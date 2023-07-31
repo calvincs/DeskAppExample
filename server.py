@@ -1,14 +1,13 @@
 #!/venv/bin/python
 
-
 from flask import Flask, render_template, request
 from functools import wraps
 import webview
 import os
 import time
 import psutil
-import configparser
 import random
+import re
 
 
 # Setup the Flask Server
@@ -32,42 +31,48 @@ def verify_token(function):
             return function(*args, **kwargs)
         else:
             raise Exception('Authentication error')
-
     return wrapper
 
 
 @server.after_request
 def add_header(response):
+    """
+        Disable caching
+    """
     response.headers['Cache-Control'] = 'no-store'
     return response
 
 
-@server.route('/')
+@server.route('/', methods=['GET'])
 def landing():
     """
-    Render index.html. Initialization is performed asynchronously in initialize() function
+        Render index.html. Initialization is performed asynchronously in initialize() function
+        We also look for a route parameter, if given we set the template value 'route' to match.
     """
     server.logger.info("Landing page visited")
 
-    return render_template('index.html', token=webview.token)
+    route_param = request.args.get('route', '')
+    route_pattern = re.compile(r'^([a-zA-Z0-9]{1,63})$')
+    match = route_pattern.match(route_param)
+    if match:
+        uri_name = match.group(1)
+        route = f"/{uri_name}"
+        server.logger.info(f"Route parameter found: {route}")
+    else:
+        route = '/about'
+
+    return render_template('index.html', token=webview.token, route=route)
 
 
-@server.after_request
-def add_header(response):
-    response.headers['Cache-Control'] = 'no-store'
-    return response
-
-
-@server.route("/home")
+@server.route("/about")
 @verify_token
 def home():
     """
         This function renders the home.html template when you visit the /home URL.
     """
-    server.logger.info("Home page visited")
-
-    config = read_config()
-    return render_template("welcome.html", data=config["APP"])
+    server.logger.info("About page visited")
+    data = server._config_data["APP"]
+    return render_template("about.html", data=data)
 
 
 @server.route('/calc', methods=['GET', 'POST'])
@@ -134,19 +139,17 @@ def system_info():
     return render_template('system_info.html', processes=processes, memory_info=memory_info, cpu_info=cpu_info, disk_info=disk_info)
 
 
-# Route to display system configuration using the configuration.html template
-@server.route("/system_configuration", methods=["GET", "POST"])
+# Route to display system configuration using the config.html template
+@server.route("/config", methods=["GET", "POST"])
 @verify_token
-def system_configuration():
+def config():
     """
-        This function renders the configuration.html template when you visit the /system_configuration URL.
-
+        This function renders the config.html template when you visit the /config URL.
         It also handles the form submission and updates the config.ini file with the submitted data.
     """
-    server.logger.info("System configuration page visited")
+    server.logger.info("Configuration page visited")
 
-    # Read the config.ini file
-    config = read_config()
+    config = server._config_data
     
     if request.method == "GET":
         # Access values from the config.ini file
@@ -154,7 +157,7 @@ def system_configuration():
         owner = config.get('APP', 'owner')
         version = config.get('APP', 'version')
         created = config.get('APP', 'created')
-        return render_template('configuration.html', **{
+        return render_template('config.html', **{
             'app_name': app_name,
             'owner': owner,
             'version': version,
@@ -170,7 +173,6 @@ def system_configuration():
 
         #Simulate delay to show off loader, and simulate a failed update.
         random_delay = random.randint(1, 15)
-        # tempwindow = loading("Updating config.ini file...")
         time.sleep(random_delay)
 
         # Determine if this was a successful update or not, randomly 50/50 chance
@@ -179,7 +181,7 @@ def system_configuration():
 
             server.logger.warning("Config update failed!")
 
-            return render_template('configuration.html', **{
+            return render_template('config.html', **{
                 'app_name': config['APP']['name'],
                 'owner': config['APP']['owner'],
                 'version': config['APP']['version'],
@@ -189,13 +191,13 @@ def system_configuration():
         
         else:
             # Write the changes back to the config.ini file
-            write_config(config)
+            server.write_config(config)
 
             server.logger.info("Config updated successfully!")
 
             # Prepare the update status message
             status = "Config updated successfully!"
-            return render_template('configuration.html', **{
+            return render_template('config.html', **{
                 'app_name': config['APP']['name'],
                 'owner': config['APP']['owner'],
                 'version': config['APP']['version'],
@@ -214,27 +216,27 @@ def logs():
 
     with open(server.log_file_name, 'r') as f:
         lines = f.readlines()
-        last_lines = [line for line in lines[-10:]]
+        last_lines = [line for line in lines[-100:]]
+        last_lines = last_lines[::-1]  # reverse the list
         
     return render_template("logs.html", logs=last_lines)
 
 
-# Function to read the config.ini file
-def read_config():
+@server.route("/docs")
+@verify_token
+def docs():
     """
-        This function reads the config.ini file and returns the config object.
+        This function renders the docs.html template when you visit the /docs URL.
     """
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    return config
+    server.logger.info("Docs page visited")        
+    return render_template("docs.html")
 
 
-# Function to write changes to the config.ini file
-def write_config(config_data):
+@server.route("/license")
+@verify_token
+def license():
     """
-        This function writes the changes to the config.ini file.
-        It also updates the global state variables with the new values.
+        This function renders the license.html template when you visit the /license URL.
     """
-    # Update the config.ini file with the new values, but also global state variables
-    with open('config.ini', 'w') as config_file:
-        config_data.write(config_file)
+    server.logger.info("License page visited")        
+    return render_template("license.html")
