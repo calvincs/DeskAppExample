@@ -1,0 +1,10 @@
+<!-- logs.html -->
+<fieldset>
+    <legend>Recent Log Entries</legend>
+    <pre hx-get="/logs" hx-target="#content" hx-trigger="every 5s">
+        {% for log in logs -%}
+        {{ log | trim}}
+        {% endfor %}
+    </pre>
+</fieldset>
+

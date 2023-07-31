@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+    <title>Demo Application</title>
+    <script src="static/js/htmx.min.js"></script>
+    <link rel="stylesheet" href="static/css/missing.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+    <body>
+        <div id="content" hx-get="{{ route }}" hx-trigger="load">
+            <!-- Content will be loaded here -->
+        </div>
+            <!-- Modal content using the <dialog> element -->
+        <dialog id="modal">
+            <p id="modalMessage"></p>
+            <button id="closeBtn">OK</button>
+        </dialog>
+        <!-- Overlay -->
+        <div id="overlay" class="htmx-indicator">
+            <div id="loader">
+                <!-- Loading indicator here -->
+                <p>Please Hold</p>
+                <!-- Loader Icon, use your own or a standard one like a spinner -->
+                <img src="static/img/loader.gif"/>
+            </div>
+        </div>
+        <script>
+            // Authorize all requests via the token in the header for htmx calls
+            document.body.addEventListener('htmx:configRequest', (event) => {
+                event.detail.headers['token'] = '{{token}}';
+            });
+        </script>
+    </body>
+</html>
+
+

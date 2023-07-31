@@ -1,0 +1,50 @@
+<!-- configuration.html -->
+<fieldset id="configuration__form" class="table">
+    <legend>Configuration Settings</legend>
+    <p> Simulates a slow update process, and both random failure and successful updates</p>
+    <form id="configForm" hx-post="/config" hx-target="#content" hx-indicator="#overlay">
+        <label for="appName">App Name:</label>
+        <input type="text" id="appName" name="name" value="{{ app_name }}" required><br>
+
+        <label for="owner">Owner:</label>
+        <input type="text" id="owner" name="owner" value="{{ owner }}" required><br>
+
+        <label for="version">Version:</label>
+        <input type="text" id="version" name="version" value="{{ version }}" required><br>
+
+        <label for="created">Created:</label>
+        <input type="datetime-local" id="created" name="created" value="{{ created }}" required><br>
+
+        <button type="submit" onclick="clearMsg()">Save Changes</button>
+    </form>
+</fieldset>
+<!-- Display the update status here -->
+<div id="updateStatus">
+    {% if success %}
+        <div class="box ok">
+            <strong class="block titlebar">Success</strong>
+            {{ success }}
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="box bad">
+            <strong class="block titlebar">Error</strong>
+            {{ error }}
+        </div>
+    {% endif %}
+</div>
+<script>
+    function clearMsg() {
+        // This function will be executed before the POST request is sent
+        // Put an overlay on the screen to stop the user from clicking anything
+        document.getElementById('overlay').style.display = 'block';
+        // Clear the update status if it exists
+        document.getElementById("updateStatus").innerHTML = "";
+    }
+
+    document.getElementById('configForm').addEventListener('htmx:afterOnLoad', function() {
+        // This function will be executed after the POST request has been completed
+        // Hide overlay
+        document.getElementById('overlay').style.display = 'none';
+    });
+</script>
